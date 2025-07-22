@@ -1,0 +1,176 @@
+{
+    "en": {
+      "Agencies": "Agencies",
+      "circuits": "Circuits",
+      "locations": "Locations",
+      "Accommodations": "Accommodations",
+      "contact": "Contact Us",
+      "Register": "Register",
+      "Login": "Login",
+      "Logout": "Logout",
+      "Username": "Username",
+      "Email": "Email",
+      "Phone": "Phone Number",
+      "Password": "Password",
+      "ConfirmPassword": "Confirm Password",
+      "Don't have an account?": "Don't have an account?",
+      "register now": "register now",
+      "You have an account?": "You have an account?",
+      "AboutUs": "About Us",
+      "search_placeholder": "Search",
+      "welcome_message_hero": "Discover Your Next Adventure - Curated Just for You",
+      "hero_paragraph":"Embark on a journey tailored to your dreams. Explore unique travel circuits from trusted agencies, book seamlessly, and create unforgettable memories. Your perfect getaway starts here!",
+      "View Details": "View Details",
+      "see more": "See More",
+      "Reviews": "Reviews",
+      "Terms of Service": "Terms of Service",
+      "Privacy Policy": "Privacy Policy",
+      "© 2024 Jawla. All rights reserved": "© 2024 Jawla. All rights reserved",
+      "login_to_review": "Please login to submit a review",
+      "login_to_review_prompt": "Login to submit your review",
+      "reserve your place now": "Reserve Your Place Now",
+      "login_to_reserve": "Please login to submit a reservation",
+      "login_to_reserve_prompt": "Login to submit your reservation",
+      "Select Nationality": "Select Nationality",
+      "conversations": "Conversations",
+      "Test your language": "Test your language",
+      "next": "Next"
+    },
+
+
+
+    "fr": {
+      "Agencies": "Agences",
+      "circuits": "Circuits",
+      "locations": "Lieux",
+      "Accommodations": "Hébergements",
+      "contact": "Contactez-nous",
+      "Register": "S'inscrire",
+      "Login": "Se connecter",
+      "Logout": "Déconnexion",
+      "Username": "Nom d'utilisateur",
+      "Email": "Email",
+      "Phone": "Numéro de téléphone",
+      "Password": "Mot de pass",
+      "ConfirmPassword": "Confirmez le mot de passe",
+      "Don't have an account?": "Vous n'avez pas de compte?",
+      "You have an account?": "Vous avez un compte?",
+      "register now": "inscrivez-vous maintenant",
+      "AboutUs": "À propos de nous",
+      "search_placeholder": "Recherche",
+      "welcome_message_hero": "Découvrez votre prochaine aventure - Créée spécialement pour vous",
+      "hero_paragraph":"Partez pour un voyage taillé sur mesure. Explorez des circuits uniques proposés par des agences certifiées, réservez en toute simplicité, et créez des souvenirs inoubliables. Votre échappée parfaite commence ici!",
+      "View Details": "View Details",
+      "see more": "voir plus",
+      "Reviews": "Avis",
+      "Terms of Service": "Conditions d'utilisation",
+      "Privacy Policy": "politique de confidentialité",
+      "© 2024 Jawla. All rights reserved": "© 2024 Jawla. Tous droits réservés",
+      "login_to_review": "Veuillez vous connecter pour soumettre un avis",
+      "login_to_review_prompt": "Connectez-vous pour soumettre votre avis",
+      "reserve your place now": "ٌRéservez Votre Place Maintenant",
+      "login_to_reserve": "Veuillez vous connecter pour soumettre une réservation",
+      "login_to_reserve_prompt": "Connectez-vous pour soumettre votre réservation",
+      "Select Nationality": "Nationalité",
+      "conversations": "Conversation",
+      "Test your language": "Testez votre langue",
+      "next": "Suivant"
+
+
+
+
+
+    },
+
+
+
+    "ar": {
+      "Agencies": "الوكالات",
+      "circuits": "الجولات",
+      "locations": "المواقع",
+      "Accommodations": "الإقامات",
+      "contact": "اتصل بنا",
+      "Register": "تسجيل",
+      "Login": "تسجيل الدخول",
+      "Logout": "تسجيل الخروج",
+      "Username": "اسم المستخدم",
+      "Email": "البريد الالكتروني",
+      "Phone": "رقم الهاتف",
+      "Password": "كلمة المرور",
+      "ConfirmPassword": "تأكيد كلمة المرور",
+      "Don't have an account?": "لاتملك حساب؟",
+      "You have an account?": "تملك حساب؟",
+      "register now": "سجل الان",
+      "AboutUs": "معلومات عنا",
+      "search_placeholder": "بحث",
+      "welcome_message_hero": "اكتشف مغامرتك القادمة - مصممة خصيصًا لك",
+      "hero_paragraph":"انطلق في رحلة تحقق أحلامك. استكشف رحلات مُوجّهة فريدة من وكالات موثوقة، احجز بسلاسة، واصنع ذكريات لا تُنسى. مغامرتك المثالية تبدأ من هنا!",
+      "View Details": "شاهد التفاصيل",
+      "see more": "شاهد المزيد",
+      "Reviews": "التعليقات",
+      "Terms of Service": "شروط الخدمة",
+      "Privacy Policy": "سياسة الخصوصية",
+      "© 2024 Jawla. All rights reserved": "© ٢٠٢٤ جوله. جميع الحقوق محفوظة",
+      "login_to_review": "الرجاء تسجيل الدخول لتقديم مراجعة",
+      "login_to_review_prompt": "تسجيل الدخول لإرسال تقييمك",
+      "reserve your place now": "احجز مكانك الان",
+      "login_to_reserve": "الرجاء تسجيل الدخول لتقديم الحجز",
+      "login_to_reserve_prompt": "قم بتسجيل الدخول لتقديم حجزك",
+      "Select Nationality": "الجنسية",
+      "conversations": "المحادثات",
+      "Test your language": "اختبر لغتك",
+      "next": "التالي"
+
+
+
+
+
+
+    },
+
+
+
+    "es": {
+  "Agencies": "Agencias",
+  "circuits": "Circuitos",
+  "locations": "Lugares",
+  "Accommodations": "Alojamientos",
+  "contact": "Contáctanos",
+  "Register": "Registrarse",
+  "Login": "Iniciar sesión",
+  "Logout": "Cerrar sesión",
+  "Username": "Nombre de usuario",
+  "Email": "Correo electrónico",
+  "Phone": "Número de teléfono",
+  "Password": "Contraseña",
+  "ConfirmPassword": "Confirmar contraseña",
+  "Don't have an account?": "¿No tienes una cuenta?",
+  "register now": "regístrate ahora",
+  "You have an account?": "¿Ya tienes una cuenta?",
+  "AboutUs": "Sobre nosotros",
+  "search_placeholder": "Buscar",
+  "welcome_message_hero": "Descubre tu próxima aventura - Curada solo para ti",
+  "hero_paragraph": "Emprende un viaje adaptado a tus sueños. Explora circuitos únicos de agencias confiables, reserva sin complicaciones y crea recuerdos inolvidables. ¡Tu escapada perfecta comienza aquí!",
+  "View Details": "Ver detalles",
+  "see more": "Ver más",
+  "Reviews": "Reseñas",
+  "Terms of Service": "Términos del servicio",
+  "Privacy Policy": "Política de privacidad",
+  "© 2024 Jawla. All rights reserved": "© 2024 Jawla. Todos los derechos reservados",
+  "login_to_review": "Por favor inicia sesión para enviar una reseña",
+  "login_to_review_prompt": "Inicia sesión para enviar tu reseña",
+  "reserve your place now": "Reserva tu lugar ahora",
+  "login_to_reserve": "Por favor inicia sesión para hacer una reserva",
+  "login_to_reserve_prompt": "Inicia sesión para hacer tu reserva",
+  "Select Nationality": "Selecciona tu nacionalidad",
+  "conversations": "Conversaciones",
+  "Test your language": "Pon a prueba tu idioma",
+  "next": "Próximo"
+
+}
+
+  }
+
+
+
+  
