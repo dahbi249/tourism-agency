@@ -600,12 +600,20 @@ nav {
   right: 0px;
 }
 
+.right-3 {
+  right: 0.75rem;
+}
+
 .top-0 {
   top: 0px;
 }
 
 .top-1\/2 {
   top: 50%;
+}
+
+.top-3 {
+  top: 0.75rem;
 }
 
 .z-10 {
@@ -811,6 +819,10 @@ nav {
   height: 175px;
 }
 
+.h-\[400px\] {
+  height: 400px;
+}
+
 .h-\[41px\] {
   height: 41px;
 }
@@ -847,12 +859,8 @@ nav {
   height: 100vh;
 }
 
-.h-\[700px\] {
-  height: 700px;
-}
-
-.h-\[400px\] {
-  height: 400px;
+.h-\[185px\] {
+  height: 185px;
 }
 
 .min-h-screen {
@@ -949,6 +957,18 @@ nav {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-\[175px\] {
+  width: 175px;
+}
+
+.w-\[275px\] {
+  width: 275px;
+}
+
+.w-\[575px\] {
+  width: 575px;
 }
 
 .max-w-2xl {
@@ -1403,6 +1423,11 @@ nav {
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.object-fill {
+  -o-object-fit: fill;
+     object-fit: fill;
 }
 
 .p-1 {
@@ -1880,12 +1905,12 @@ nav {
   transition-duration: 700ms;
 }
 
-.ease-out {
-  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-}
-
 .ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ease-out {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 .\[-ms-overflow-style\:none\] {

@@ -13,6 +13,7 @@ $cityResult = mysqli_query($conn, $cityQuery);
 // Fetch location names
 $locationQuery = "SELECT DISTINCT Name FROM location ORDER BY Name ASC";
 $locationResult = mysqli_query($conn, $locationQuery);
+
 ?>
 <main>
     <!-- Hero Section -->
@@ -57,7 +58,7 @@ $locationResult = mysqli_query($conn, $locationQuery);
         <div class="container mx-auto text-center px-4">
             <h2 class="text-3xl font-bold mb-8 text-center">Your trusted travel partner for unforgettable journeys.</h2>
             <div class="relative px-[52px] lg:px-[62px]">
-                <div id="agencies-slider" class="flex gap-[30px] lg:gap-[150px] overflow-x-auto snap-x snap-mandatory scroll-smooth  pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
+                <div id="agencies-slider" class=" relative flex gap-[30px] lg:gap-[150px] overflow-x-auto snap-x snap-mandatory scroll-smooth  pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
                     <!-- Agency Cards -->
                     <?php while ($agenciesRows = mysqli_fetch_assoc($agenciesResult)) {
                         // Fetch media for THIS agency
@@ -65,22 +66,48 @@ $locationResult = mysqli_query($conn, $locationQuery);
                         mysqli_stmt_bind_param($mediaStmt, "i", $agenciesRows['AgencyID']);
                         mysqli_stmt_execute($mediaStmt);
                         $mediaResult = mysqli_stmt_get_result($mediaStmt);
-                        $mediaRow = mysqli_fetch_assoc($mediaResult); // Get first media entry    
+                        $mediaRow = mysqli_fetch_assoc($mediaResult);
+
+                        $customerID = $_SESSION['CustomerID'] ?? null;
+                        $agencyID = $agenciesRows['AgencyID'];
+                        $wishlisted = false;
+
+                        if ($customerID) {
+                            $checkSql = "SELECT 1 FROM wishlist WHERE CustomerID = ? AND EntityType = 'agency' AND EntityID = ?";
+                            $stmt = mysqli_prepare($conn, $checkSql);
+                            mysqli_stmt_bind_param($stmt, "ii", $customerID, $agencyID);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_store_result($stmt);
+                            $wishlisted = mysqli_stmt_num_rows($stmt) > 0;
+                            mysqli_stmt_close($stmt);
+                        }
                     ?>
-                        <a href="http://localhost/tourism%20agency/main/agency_page.php?AgencyID=<?= $agenciesRows['AgencyID'] ?>">
-                            <div class="card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px]  rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
-                                <img src="../media/agencies/<?= $mediaRow["URL"] ?? 'default.jpg'; ?>" alt="<?= $mediaRow['Caption']; ?>" class="w-full h-[175px] object-cover rounded-t-2xl">
 
+                        <div class="relative card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
+
+                            <!-- Heart icon inside the card -->
+                            <button
+                                class="absolute top-3 right-3 text-2xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
+                                data-entity-id="<?= $agencyID ?>"
+                                data-entity-type="agency"
+                                style="color: <?= $wishlisted ? 'red' : 'gray' ?>;"
+                                title="Add to wishlist">
+                                <i class='bx bxs-heart'></i>
+                            </button>
+
+                            <!-- Wrap only content in link -->
+                            <a href="http://localhost/tourism%20agency/main/agency_page.php?AgencyID=<?= $agencyID ?>" class="w-full">
+                                <img src="../media/agencies/<?= $mediaRow["URL"] ?? 'default.jpg'; ?>" alt="<?= $mediaRow['Caption']; ?>" class="w-[575px]  h-[175px] object-cover rounded-t-2xl">
                                 <div class="px-4 py-4 text-center">
-                                    <h3 class="font-semibold text-lg lg:text-xl  mb-1"><?= $agenciesRows["Name"]; ?></h3>
-                                    <p class="text-sm  mb-3"><?= $agenciesRows["Address"]; ?></p>
+                                    <h3 class="font-semibold text-lg lg:text-xl mb-1"><?= $agenciesRows["Name"]; ?></h3>
+                                    <p class="text-sm mb-3"><?= $agenciesRows["Address"]; ?></p>
                                 </div>
+                            </a>
 
-
-                            </div>
-                        </a>
+                        </div>
 
                     <?php } ?>
+
                 </div>
 
                 <!-- Navigation Buttons -->
@@ -118,53 +145,81 @@ $locationResult = mysqli_query($conn, $locationQuery);
 
     <hr>
 
-    <!-------------------------------------- Circuits section  start--------------------------------->
-    <section class="py-16 opacity-0 translate-y-20 transition-all duration-1000 ease-out ">
+    <!-------------------------------------- Circuits section start --------------------------------->
+    <section class="py-16 opacity-0 translate-y-20 transition-all duration-1000 ease-out">
         <div class="container mx-auto text-center px-4">
             <h2 class="text-3xl font-bold mb-8 text-center">From thrilling adventures to peaceful escapes – we’ve got it all!</h2>
             <div class="relative px-[52px] lg:px-[62px]">
-                <div id="circuits-slider" class="flex gap-[30px] lg:gap-[150px] overflow-x-auto snap-x snap-mandatory scroll-smooth  pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
-                    <!-- Location Cards -->
-                    <?php while ($circuitsRows = mysqli_fetch_assoc($circuitsResult)) {
-                        // Fetch media for THIS agency
+                <div id="circuits-slider" class=" flex gap-[30px] lg:gap-[150px] overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
+
+                    <?php
+                    while ($circuitsRows = mysqli_fetch_assoc($circuitsResult)) {
+                        $circuitID = $circuitsRows['CircuitID'];
+
+                        // Fetch media
                         $mediaStmt = mysqli_prepare($conn, "SELECT * FROM media WHERE EntityType = 'circuit' AND EntityID = ? AND IsPrimary = 1");
-                        mysqli_stmt_bind_param($mediaStmt, "i", $circuitsRows['CircuitID']);
+                        mysqli_stmt_bind_param($mediaStmt, "i", $circuitID);
                         mysqli_stmt_execute($mediaStmt);
                         $mediaResult = mysqli_stmt_get_result($mediaStmt);
-                        $mediaRow = mysqli_fetch_assoc($mediaResult); // Get first media entry    
+                        $mediaRow = mysqli_fetch_assoc($mediaResult);
+
+                        // Check if wishlisted
+                        $customerID = $_SESSION['CustomerID'] ?? null;
+                        $wishlisted = false;
+
+                        if ($customerID) {
+                            $checkSql = "SELECT 1 FROM wishlist WHERE CustomerID = ? AND EntityType = 'circuit' AND EntityID = ?";
+                            $stmt = mysqli_prepare($conn, $checkSql);
+                            mysqli_stmt_bind_param($stmt, "ii", $customerID, $circuitID);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_store_result($stmt);
+                            $wishlisted = mysqli_stmt_num_rows($stmt) > 0;
+                            mysqli_stmt_close($stmt);
+                        }
                     ?>
-                        <a href="http://localhost/tourism%20agency/main/circuit_page.php?CircuitID=<?= $circuitsRows['CircuitID'] ?>">
-                            <div class="card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
-                                <img src="../media/circuits/<?= $mediaRow["URL"] ?? 'default.jpeg'; ?>" alt="<?= $mediaRow['Caption']; ?>" class="w-full h-[165px] object-cover rounded-t-2xl">
+                        <div class="relative card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
+                            <!-- Wishlist button -->
+                            <button
+                                class="absolute top-3 right-3 text-2xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
+                                data-entity-id="<?= $circuitID ?>"
+                                data-entity-type="circuit"
+                                style="color: <?= $wishlisted ? 'red' : 'gray' ?>;"
+                                title="Add to wishlist">
+                                <i class='bx bxs-heart'></i>
+                            </button>
+
+                            <a href="http://localhost/tourism%20agency/main/circuit_page.php?CircuitID=<?= $circuitID ?>">
+                                <img src="../media/circuits/<?= $mediaRow["URL"] ?? 'default.jpeg'; ?>" alt="<?= $mediaRow['Caption']; ?>" class="w-[575px] h-[175px] object-cover rounded-t-2xl">
 
                                 <div class="px-4 py-4 text-center">
-                                    <h3 class="font-semibold text-lg lg:text-xl  mb-1"><?= $circuitsRows["c.Name"]; ?></h3>
-                                    <p class="text-sm  mb-2"><?= $circuitsRows["c.Description"]; ?></p>
+                                    <h3 class="font-semibold text-lg lg:text-xl mb-1"><?= $circuitsRows["c.Name"]; ?></h3>
+                                    <p class="text-sm mb-2"><?= $circuitsRows["c.Description"]; ?></p>
                                     <div class="text-lg font-semibold text-primary mb-3">
                                         <?= number_format($circuitsRows['StartingPrice'], 2) ?> DZD
                                     </div>
                                 </div>
-
-                            </div>
-                        </a>
-
+                            </a>
+                        </div>
                     <?php } ?>
                 </div>
 
                 <!-- Navigation Buttons -->
-                <button id="circuits-prev" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] left-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer  rounded-full shadow-md p-2">
+                <button id="circuits-prev" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] left-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer rounded-full shadow-md p-2">
                     <img src="../assets/left-desktop-arrow-circle.png" alt="">
                 </button>
-                <button id="circuits-next" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] right-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer  rounded-full shadow-md p-2">
+                <button id="circuits-next" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] right-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer rounded-full shadow-md p-2">
                     <img src="../assets/right-desktop-arrow-circle.png" alt="">
                 </button>
             </div>
-            <button class="text-white mx-auto  w-[250px] h-[53.84px] lg:w-[362px] lgh-[73px]  bg-primary rounded-full lg:text-[36px] text-[24px] font-semibold hover:scale-105  transition-all duration-1000 ease-out">
+
+            <!-- See more button -->
+            <button class="text-white mx-auto w-[250px] h-[53.84px] lg:w-[362px] lgh-[73px] bg-primary rounded-full lg:text-[36px] text-[24px] font-semibold hover:scale-105 transition-all duration-1000 ease-out">
                 <a href="http://localhost/tourism%20agency/main/circuits.php"><?php echo $lang['see more'] ?></a>
             </button>
         </div>
     </section>
-    <!-------------------------------------- Circuits section  end--------------------------------->
+    <!-------------------------------------- Circuits section end --------------------------------->
+
     <hr>
     <a href="">
         <section class="p-3 flex text-white flex-col lg:flex-row justify-evenly items-center opacity-0  translate-y-20 transition-all duration-1000 ease-out bg-primary hover:scale-105">
@@ -180,51 +235,76 @@ $locationResult = mysqli_query($conn, $locationQuery);
     </section>
     <hr> -->
 
-    <!-------------------------------------- Locations section  start--------------------------------->
-    <section class="py-16 opacity-0 translate-y-20 transition-all duration-1000 ease-out ">
+    <!-------------------------------------- Locations section start --------------------------------->
+    <section class="py-16 opacity-0 translate-y-20 transition-all duration-1000 ease-out">
         <div class="container mx-auto text-center px-4">
             <h2 class="text-3xl font-bold mb-8 text-center">Where nature and heritage meet in perfect harmony.</h2>
             <div class="relative px-[52px] lg:px-[62px]">
-                <div id="locations-slider" class="flex gap-[30px] lg:gap-[150px] overflow-x-auto snap-x snap-mandatory scroll-smooth  pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
-                    <!-- Location Cards -->
-                    <?php while ($locationsRows = mysqli_fetch_assoc($locationsResult)) {
-                        // Fetch media for THIS agency
+                <div id="locations-slider" class="  flex gap-[30px] lg:gap-[150px] overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
+
+                    <?php
+                    while ($locationsRows = mysqli_fetch_assoc($locationsResult)) {
+                        $locationID = $locationsRows['LocationID'];
+
+                        // Fetch media
                         $mediaStmt = mysqli_prepare($conn, "SELECT * FROM media WHERE EntityType = 'location' AND EntityID = ? AND IsPrimary = 1");
-                        mysqli_stmt_bind_param($mediaStmt, "i", $locationsRows['LocationID']);
+                        mysqli_stmt_bind_param($mediaStmt, "i", $locationID);
                         mysqli_stmt_execute($mediaStmt);
                         $mediaResult = mysqli_stmt_get_result($mediaStmt);
-                        $mediaRow = mysqli_fetch_assoc($mediaResult); // Get first media entry    
-                    ?>
-                        <a href="http://localhost/tourism%20agency/main/location_page.php?LocationID=<?= $locationsRows['LocationID'] ?>">
-                            <div class="card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
-                                <img src="../media/locations/<?= $mediaRow["URL"] ?? 'default.jpg'; ?>" alt="<?= $mediaRow['Caption']; ?>" class="w-full h-[165px] object-cover rounded-t-2xl">
+                        $mediaRow = mysqli_fetch_assoc($mediaResult);
 
+                        // Check if wishlisted
+                        $customerID = $_SESSION['CustomerID'] ?? null;
+                        $wishlisted = false;
+
+                        if ($customerID) {
+                            $checkSql = "SELECT 1 FROM wishlist WHERE CustomerID = ? AND EntityType = 'location' AND EntityID = ?";
+                            $stmt = mysqli_prepare($conn, $checkSql);
+                            mysqli_stmt_bind_param($stmt, "ii", $customerID, $locationID);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_store_result($stmt);
+                            $wishlisted = mysqli_stmt_num_rows($stmt) > 0;
+                            mysqli_stmt_close($stmt);
+                        }
+                    ?>
+                        <div class="relative card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
+                            <!-- Wishlist button -->
+                            <button
+                                class="absolute top-3 right-3 text-2xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
+                                data-entity-id="<?= $locationID ?>"
+                                data-entity-type="location"
+                                style="color: <?= $wishlisted ? 'red' : 'gray' ?>;"
+                                title="Add to wishlist">
+                                <i class='bx bxs-heart'></i>
+                            </button>
+
+                            <a href="http://localhost/tourism%20agency/main/location_page.php?LocationID=<?= $locationID ?>">
+                                <img src="../media/locations/<?= $mediaRow["URL"] ?? 'default.jpg'; ?>" alt="<?= $mediaRow['Caption']; ?>" class="w-[575px]  h-[175px] object-cover rounded-t-2xl">
                                 <div class="px-4 py-4 text-center">
                                     <h3 class="font-semibold text-lg lg:text-xl mb-1"><?= $locationsRows["Name"]; ?></h3>
                                     <p class="text-sm mb-3"><?= $locationsRows["Address"]; ?></p>
                                 </div>
-
-
-                            </div>
-                        </a>
-
+                            </a>
+                        </div>
                     <?php } ?>
                 </div>
 
                 <!-- Navigation Buttons -->
-                <button id="locations-prev" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] left-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer  rounded-full shadow-md p-2">
+                <button id="locations-prev" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] left-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer rounded-full shadow-md p-2">
                     <img src="../assets/left-desktop-arrow-circle.png" alt="">
                 </button>
-                <button id="locations-next" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] right-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer  rounded-full shadow-md p-2">
+                <button id="locations-next" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] right-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer rounded-full shadow-md p-2">
                     <img src="../assets/right-desktop-arrow-circle.png" alt="">
                 </button>
             </div>
-            <button class="text-white mx-auto  w-[250px] h-[53.84px] lg:w-[362px] lgh-[73px]  bg-primary rounded-full lg:text-[36px] text-[24px] font-semibold hover:scale-105  transition-all duration-1000 ease-out">
+
+            <!-- See more button -->
+            <button class="text-white mx-auto w-[250px] h-[53.84px] lg:w-[362px] lgh-[73px] bg-primary rounded-full lg:text-[36px] text-[24px] font-semibold hover:scale-105 transition-all duration-1000 ease-out">
                 <a href="http://localhost/tourism%20agency/main/locations.php"><?php echo $lang['see more'] ?></a>
             </button>
         </div>
     </section>
-    <!-------------------------------------- Locations section  end--------------------------------->
+    <!-------------------------------------- Locations section end --------------------------------->
 
 
     <hr>
@@ -240,49 +320,76 @@ $locationResult = mysqli_query($conn, $locationQuery);
         </section>
     </a>
     <hr>
-    <!-------------------------------------- Accommodations section  start--------------------------------->
-    <section class="py-16 opacity-0 translate-y-20 transition-all duration-1000 ease-out ">
+    <!-------------------------------------- Accommodations section start --------------------------------->
+    <section class="py-16 opacity-0 translate-y-20 transition-all duration-1000 ease-out">
         <div class="container mx-auto text-center px-4">
             <h2 class="text-3xl font-bold mb-8 text-center">Comfort meets authenticity.</h2>
             <div class="relative px-[52px] lg:px-[62px]">
-                <div id="accommodations-slider" class="flex gap-[30px] lg:gap-[150px] overflow-x-auto snap-x snap-mandatory scroll-smooth  pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
-                    <!-- Location Cards -->
-                    <?php while ($accommodationsRows = mysqli_fetch_assoc($accommodationsResult)) {
-                        // Fetch media for THIS agency
+                <div id="accommodations-slider" class="  flex gap-[30px] lg:gap-[150px] overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
+                    <!-- Accommodation Cards -->
+                    <?php
+                    while ($accommodationsRows = mysqli_fetch_assoc($accommodationsResult)) {
+                        $accommodationID = $accommodationsRows['AccommodationID'];
+
+                        // Fetch media
                         $mediaStmt = mysqli_prepare($conn, "SELECT * FROM media WHERE EntityType = 'accommodation' AND EntityID = ? AND IsPrimary = 1");
-                        mysqli_stmt_bind_param($mediaStmt, "i", $accommodationsRows['AccommodationID']);
+                        mysqli_stmt_bind_param($mediaStmt, "i", $accommodationID);
                         mysqli_stmt_execute($mediaStmt);
                         $mediaResult = mysqli_stmt_get_result($mediaStmt);
-                        $mediaRow = mysqli_fetch_assoc($mediaResult); // Get first media entry    
-                    ?>
-                        <a href="http://localhost/tourism%20agency/main/accommodation_page.php?AccommodationID=<?= $accommodationsRows['AccommodationID'] ?>">
-                            <div class="card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
-                                <img src="../media/accommodations/<?= $mediaRow["URL"] ?? 'default.jpg'; ?>" alt="<?= $mediaRow['Caption']; ?>" class="w-full h-[165px] object-cover rounded-t-2xl">
+                        $mediaRow = mysqli_fetch_assoc($mediaResult);
 
+                        // Check if wishlisted
+                        $customerID = $_SESSION['CustomerID'] ?? null;
+                        $wishlisted = false;
+
+                        if ($customerID) {
+                            $checkSql = "SELECT 1 FROM wishlist WHERE CustomerID = ? AND EntityType = 'accommodation' AND EntityID = ?";
+                            $stmt = mysqli_prepare($conn, $checkSql);
+                            mysqli_stmt_bind_param($stmt, "ii", $customerID, $accommodationID);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_store_result($stmt);
+                            $wishlisted = mysqli_stmt_num_rows($stmt) > 0;
+                            mysqli_stmt_close($stmt);
+                        }
+                    ?>
+                        <div class="relative card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
+                            <!-- Wishlist button -->
+                            <button
+                                class="absolute top-3 right-3 text-2xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
+                                data-entity-id="<?= $accommodationID ?>"
+                                data-entity-type="accommodation"
+                                style="color: <?= $wishlisted ? 'red' : 'gray' ?>;"
+                                title="Add to wishlist">
+                                <i class='bx bxs-heart'></i>
+                            </button>
+
+                            <a href="http://localhost/tourism%20agency/main/accommodation_page.php?AccommodationID=<?= $accommodationID ?>">
+                                <img src="../media/accommodations/<?= $mediaRow["URL"] ?? 'default.jpg'; ?>" alt="<?= $mediaRow['Caption']; ?>" class="w-[575px]  h-[175px] object-cover rounded-t-2xl">
                                 <div class="px-4 py-4 text-center">
                                     <h3 class="font-semibold text-lg lg:text-xl mb-1"><?= $accommodationsRows["Name"]; ?></h3>
                                     <p class="text-sm mb-3"><?= $accommodationsRows["Address"]; ?></p>
                                 </div>
-                            </div>
-                        </a>
-
+                            </a>
+                        </div>
                     <?php } ?>
                 </div>
 
                 <!-- Navigation Buttons -->
-                <button id="accommodations-prev" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] left-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer  rounded-full shadow-md p-2">
+                <button id="accommodations-prev" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] left-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer rounded-full shadow-md p-2">
                     <img src="../assets/left-desktop-arrow-circle.png" alt="">
                 </button>
-                <button id="accommodations-next" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] right-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer  rounded-full shadow-md p-2">
+                <button id="accommodations-next" class="absolute w-[50px] h-[50px] hover:scale-105 transition-all duration-100 ease-out lg:w-[70px] lg:h-[70px] right-0 top-1/2 -translate-y-1/2 bg-primary cursor-pointer rounded-full shadow-md p-2">
                     <img src="../assets/right-desktop-arrow-circle.png" alt="">
                 </button>
             </div>
-            <button class="text-white mx-auto  w-[250px] h-[53.84px] lg:w-[362px] lgh-[73px]  bg-primary rounded-full lg:text-[36px] text-[24px] font-semibold hover:scale-105  transition-all duration-1000 ease-out">
+
+            <!-- See More button -->
+            <button class="text-white mx-auto w-[250px] h-[53.84px] lg:w-[362px] lgh-[73px] bg-primary rounded-full lg:text-[36px] text-[24px] font-semibold hover:scale-105 transition-all duration-1000 ease-out">
                 <a href="http://localhost/tourism%20agency/main/accommodations.php"><?php echo $lang['see more'] ?></a>
             </button>
         </div>
     </section>
-    <!-------------------------------------- Accommodations section  end--------------------------------->
+    <!-------------------------------------- Accommodations section end --------------------------------->
 
 
 
@@ -290,6 +397,42 @@ $locationResult = mysqli_query($conn, $locationQuery);
 
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".wishlist-btn").forEach(button => {
+            button.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                const entityID = this.dataset.entityId;
+                const entityType = this.dataset.entityType;
+                const icon = this.querySelector("i");
+
+                fetch("http://localhost/tourism agency/other/toggle_wishlist.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: `entityID=${entityID}&entityType=${entityType}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.style.color = data.wishlisted ? "red" : "gray";
+                        } else {
+                            alert(data.message || "Failed to update wishlist");
+                        }
+                    })
+                    .catch(async (error) => {
+                        const responseText = await error?.response?.text?.();
+                        console.error("Wishlist error:", error);
+                        console.log("Raw response (if any):", responseText);
+                        alert("An error occurred.");
+                    });
+            });
+        });
+    });
+
+
+
     function initializeSlider(sliderSelector, prevSelector, nextSelector) {
         const slider = document.querySelector(sliderSelector);
         const prevBtn = document.querySelector(prevSelector);

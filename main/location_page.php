@@ -137,7 +137,7 @@ require("../other/reviewPHPCode.php");
 </section>
 
 <!-- --------------- Reviews section start ---------------------------- -->
-<section class="opacity-0 translate-y-20 transition-all duration-1000 ease-out">
+<section class="opacity-0 translate-y-20 transition-all duration-1000 ease-out ">
     <section class="mb-8 px-4 md:px-8 lg:px-20">
         <h2 class="my-5 text-2xl font-bold  md:text-3xl"><?php echo $lang["Reviews"] ?></h2>
         <?php if (!isset($_SESSION['CustomerID'])): ?>
