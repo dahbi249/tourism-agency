@@ -58,6 +58,40 @@ require("../other/agenciesPHPCode.php");
 
 
 <script>
+  function bindWishlistButtons() {
+    document.querySelectorAll(".wishlist-btn").forEach(button => {
+      button.addEventListener("click", function(e) {
+        e.preventDefault();
+
+        const entityID = this.dataset.entityId;
+        const entityType = this.dataset.entityType;
+        const icon = this.querySelector("i");
+
+        fetch("http://localhost/tourism%20agency/other/toggle_wishlist.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `entityID=${entityID}&entityType=${entityType}`
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              this.style.color = data.wishlisted ? "red" : "gray";
+            } else {
+              alert(data.message || "Failed to update wishlist");
+            }
+          })
+          .catch(error => {
+            console.error("Wishlist error:", error);
+            alert("An error occurred.");
+          });
+      });
+    });
+  }
+
+
+
   // Background images array (replace with your own images)
   const backgrounds = [
     'url("../assets/office-730681_1920.jpg")',
@@ -88,7 +122,10 @@ require("../other/agenciesPHPCode.php");
     const params = new URLSearchParams(new FormData(this));
     fetch('../other/agencies_ajax.php?' + params)
       .then(r => r.text())
-      .then(html => document.getElementById('agenciesContainer').innerHTML = html);
+      .then(html => {
+        document.getElementById('agenciesContainer').innerHTML = html;
+        bindWishlistButtons(); // ✅ call AFTER content is loaded
+      });
   });
 
   // Handle pagination
@@ -97,9 +134,17 @@ require("../other/agenciesPHPCode.php");
       e.preventDefault();
       const page = e.target.dataset.page;
       document.querySelector('input[name=page]').value = page;
-      document.getElementById('agencySearchForm').dispatchEvent(new Event('submit'));
+
+      const params = new URLSearchParams(new FormData(document.getElementById('agencySearchForm')));
+      fetch('../other/agencies_ajax.php?' + params)
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById('agenciesContainer').innerHTML = html;
+          bindWishlistButtons(); // ✅ right place
+        });
     }
   });
+
 
   // Load on page load
   document.getElementById('agencySearchForm').dispatchEvent(new Event('submit'));

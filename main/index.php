@@ -87,7 +87,7 @@ $locationResult = mysqli_query($conn, $locationQuery);
 
                             <!-- Heart icon inside the card -->
                             <button
-                                class="absolute top-3 right-3 text-2xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
+                                class="absolute top-3 right-3 text-4xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
                                 data-entity-id="<?= $agencyID ?>"
                                 data-entity-type="agency"
                                 style="color: <?= $wishlisted ? 'red' : 'gray' ?>;"
@@ -180,7 +180,7 @@ $locationResult = mysqli_query($conn, $locationQuery);
                         <div class="relative card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
                             <!-- Wishlist button -->
                             <button
-                                class="absolute top-3 right-3 text-2xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
+                                class="absolute top-3 right-3 text-4xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
                                 data-entity-id="<?= $circuitID ?>"
                                 data-entity-type="circuit"
                                 style="color: <?= $wishlisted ? 'red' : 'gray' ?>;"
@@ -270,7 +270,7 @@ $locationResult = mysqli_query($conn, $locationQuery);
                         <div class="relative card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
                             <!-- Wishlist button -->
                             <button
-                                class="absolute top-3 right-3 text-2xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
+                                class="absolute top-3 right-3 text-4xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
                                 data-entity-id="<?= $locationID ?>"
                                 data-entity-type="location"
                                 style="color: <?= $wishlisted ? 'red' : 'gray' ?>;"
@@ -355,7 +355,7 @@ $locationResult = mysqli_query($conn, $locationQuery);
                         <div class="relative card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02]">
                             <!-- Wishlist button -->
                             <button
-                                class="absolute top-3 right-3 text-2xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
+                                class="absolute top-3 right-3 text-4xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
                                 data-entity-id="<?= $accommodationID ?>"
                                 data-entity-type="accommodation"
                                 style="color: <?= $wishlisted ? 'red' : 'gray' ?>;"

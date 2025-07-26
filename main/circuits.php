@@ -108,6 +108,43 @@ $locationResult = mysqli_query($conn, $locationQuery);
 
 
 <script>
+ function bindWishlistButtons() {
+    document.querySelectorAll(".wishlist-btn").forEach(button => {
+      button.addEventListener("click", function(e) {
+        e.preventDefault();
+
+        const entityID = this.dataset.entityId;
+        const entityType = this.dataset.entityType;
+        const icon = this.querySelector("i");
+
+        fetch("http://localhost/tourism%20agency/other/toggle_wishlist.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `entityID=${entityID}&entityType=${entityType}`
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              this.style.color = data.wishlisted ? "red" : "gray";
+            } else {
+              alert(data.message || "Failed to update wishlist");
+            }
+          })
+          .catch(error => {
+            console.error("Wishlist error:", error);
+            alert("An error occurred.");
+          });
+      });
+    });
+  }
+
+
+
+
+
+
   // Add scroll animation script 
 
   // Scroll animation for sections
@@ -148,6 +185,7 @@ $locationResult = mysqli_query($conn, $locationQuery);
       .then(response => response.text())
       .then(data => {
         document.getElementById('resultsContainer').innerHTML = data;
+        bindWishlistButtons();
       })
       .catch(err => console.error(err));
   });
@@ -159,6 +197,7 @@ $locationResult = mysqli_query($conn, $locationQuery);
       const page = e.target.dataset.page;
       document.querySelector('input[name="page"]').value = page;
       form.dispatchEvent(new Event('submit'));
+      bindWishlistButtons();
     }
   });
 

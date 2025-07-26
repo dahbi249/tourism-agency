@@ -1,4 +1,5 @@
 <?php
+session_start();
 require("../includes/connect_db.php");
 
 $limit = 6;
@@ -62,6 +63,7 @@ $total = mysqli_fetch_assoc($totalResult)['total'];
 $totalPages = ceil($total / $limit);
 
 $is_rtl = false; // Set this to true if using RTL layout
+$customerID = $_SESSION['CustomerID'] ?? null;
 
 echo '<main class="' . ($is_rtl ? 'pr-[73px] md:pr-[45px] lg:pr-0' : 'pl-[73px] md:pl-[45px] lg:pl-0') . '  container mx-auto grid grid-cols-1 gap-5 lg:gap-20 md:grid-cols-2 lg:grid-cols-3 my-5">';
 
@@ -76,19 +78,41 @@ if (mysqli_num_rows($circuitsResult) > 0) {
 
         $imageURL = "../media/circuits/" . ($mediaRow["URL"] ?? "default.jpeg");
         $imageCaption = htmlspecialchars($mediaRow["Caption"] ?? "");
+        $circuitID = $circuitsRows['CircuitID'];
+        $wishlisted = false;
 
-        echo '<a href="http://localhost/tourism%20agency/main/circuit_page.php?CircuitID=' . $circuitsRows['CircuitID'] . '">
-        <div class="card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary transition-transform duration-300 hover:scale-[1.02] ">
-            <img src="' . $imageURL . '" alt="' . $imageCaption . '" class="w-full h-[165px] object-cover rounded-t-2xl">
+                        if ($customerID) {
+                            $checkSql = "SELECT 1 FROM wishlist WHERE CustomerID = ? AND EntityType = 'circuit' AND EntityID = ?";
+                            $stmt = mysqli_prepare($conn, $checkSql);
+                            mysqli_stmt_bind_param($stmt, "ii", $customerID, $circuitID);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_store_result($stmt);
+                            $wishlisted = mysqli_stmt_num_rows($stmt) > 0;
+                            mysqli_stmt_close($stmt);
+                        }
+        echo '
+        <div class="card flex flex-col items-center flex-shrink-0 w-[238px] lg:w-[360px] rounded-2xl shadow-2xl border border-primary hover:scale-[1.02] opacity-100 translate-y-0 transition-all duration-1000 ease-out snap-start">
+                                        <!-- Heart icon inside the card -->
+                           <button
+        class="absolute top-3 right-3 text-4xl focus:outline-none wishlist-btn z-10 transition-colors duration-300"
+        data-entity-id="' . $circuitID . '"
+        data-entity-type="circuit"
+        style="color: ' . ($wishlisted ? 'red' : 'gray') . '"
+    >
+        <i class="bx bxs-heart"></i>
+    </button>
+        <a href="http://localhost/tourism%20agency/main/circuit_page.php?CircuitID=' . $circuitsRows['CircuitID'] . '">
+            <img src="' . $imageURL . '" alt="' . $imageCaption . '" class="w-[575px] h-[165px] object-cover rounded-t-2xl">
             <div class="px-4 py-4 text-center">
                 <h3 class="font-semibold text-lg lg:text-xl mb-1">' . htmlspecialchars($circuitsRows["c.Name"]) . '</h3>
                 <p class="text-sm mb-2">' . htmlspecialchars($circuitsRows["c.Description"]) . '</p>
                 <div class="text-lg font-semibold text-primary mb-3">'
-                    . number_format($circuitsRows['StartingPrice'], 2) . ' DZD
+            . number_format($circuitsRows['StartingPrice'], 2) . ' DZD
                 </div>
             </div>
+            </a>
         </div>
-        </a>';
+        ';
     }
 } else {
     echo '<p class="text-center text-gray-500 col-span-full">No circuits found matching your filters.</p>';
@@ -104,4 +128,3 @@ if ($totalPages > 1) {
     }
     echo '</div>';
 }
-?>
